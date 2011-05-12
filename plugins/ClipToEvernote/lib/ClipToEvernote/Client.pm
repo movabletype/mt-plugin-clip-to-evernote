@@ -32,8 +32,8 @@ sub new {
     my $endpoint = endpoint();
     $endpoint .= Encode::encode_utf8($share);
     my $note_http_client = new Thrift::HttpClient( Encode::encode_utf8($endpoint) );
-    my $note_protocol = new Thrift::BinaryProtocol($note_http_client);
-    my $client = new EDAMNoteStore::NoteStoreClient($note_protocol, $note_protocol);
+    my $note_protocol    = new Thrift::BinaryProtocol($note_http_client);
+    my $client           = new EDAMNoteStore::NoteStoreClient($note_protocol, $note_protocol);
     return bless {
         endpoint => $endpoint,
         token    => $token,
@@ -52,6 +52,7 @@ sub proc {
             return;
         }
         if ( $exception->{errorCode} == EDAMErrors::EDAMErrorCode::AUTH_EXPIRED ) {
+            #TBD
             use Data::Dumper;
             print STDERR Dumper $exception;
         }
@@ -68,18 +69,18 @@ sub entry2note {
     my ( $entry, $notebook_guid ) = @_;
     my ( $note, $method );
     if ( my $guid = $entry->evernote_note_guid ) {
-        $note = $self->proc('getNote', $guid);
+        $note   = $self->proc('getNote', $guid);
         $method = 'updateNote';
     }
     else {
         $note ||= new EDAMTypes::Note();
-        $note->{active} = 1;
+        $note->{active}  = 1;
         $note->{created} = time * 1000;
         $method = 'createNote';
     }
     $note->{notebookGuid} = $notebook_guid;
-    $note->{title} = $entry->title;
-    my $text = _cleanup_enml( $entry->text );
+    $note->{title}        = $entry->title;
+    my $text    = _cleanup_enml( $entry->text );
     my $content = <<"ENML";
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
