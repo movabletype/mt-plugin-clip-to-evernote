@@ -19,6 +19,11 @@ function reload_evernote_widget (options) {
     url += '&signout=1';
   }
   jQuery.get(url, function (data) {
+      // Test if it's MT's error screen
+      var $error = jQuery('<div />').html(data).find('#generic-error');
+      if ( $error.length ) {
+        data = $error;
+      }
       $box.html(data).find('a.mt-open-dialog').mtDialog();
   });
 }
