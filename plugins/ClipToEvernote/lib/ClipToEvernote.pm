@@ -10,10 +10,15 @@ sub insert_widget {
     my ( $cb, $app, $param, $tmpl ) = @_;
     my $html = <<'HTML';
 <script type="text/javascript">
-function reload_evernote_widget () {
+function reload_evernote_widget (options) {
+  options = jQuery.extend({}, options);
   var $box = jQuery('div#post-to-evernote div.widget-content');
   $box.html('<img src="<mt:var name="static_uri">images/indicator.white.gif" />');
-  jQuery.get('<mt:var name="evernote_widget_url">', function (data) {
+  var url = '<mt:var name="evernote_widget_url">';
+  if ( options.signout ) {
+    url += '&signout=1';
+  }
+  jQuery.get(url, function (data) {
       $box.html(data).find('a.mt-open-dialog').mtDialog();
   });
 }
@@ -21,6 +26,13 @@ function reload_evernote_widget () {
 jQuery( function () {
   reload_evernote_widget();
 });
+
+jQuery('.signout-evernote').live( 'click', function () {
+console.log('so');
+  reload_evernote_widget({ signout: 1 });
+  return false;
+});
+
 </script>
 <mt:var name="evernote_widget_url">
 HTML

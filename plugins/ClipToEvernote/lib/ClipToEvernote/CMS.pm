@@ -8,8 +8,13 @@ sub show_widget {
     my ( $app ) = @_;
     my $plugin = MT->component('cliptoevernote');
     my %param;
-    my $entry = MT->model('entry')->load($app->param('entry_id'));
 
+    my $user = $app->user;
+    if ( $app->param('signout') ) {
+        $user->evernote_oauth_token('');
+        $user->save;
+    }
+    my $entry = MT->model('entry')->load($app->param('entry_id'));
     my ( $guid, $notebook_guid );
     my $ever = ClipToEvernote::Client->new($app);
     if ( $entry && ( $guid = $entry->evernote_note_guid )) {
