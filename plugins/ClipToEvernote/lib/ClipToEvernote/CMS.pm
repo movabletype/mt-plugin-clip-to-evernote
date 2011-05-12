@@ -87,6 +87,9 @@ sub verify_handshake {
     my $q = $app->param;
     my %cookie = $q->cookie('evernote_oauth_credential');
     my $client = get_oauth_client();
+    return $app->forward('evernote_close_dialog')
+        unless $q->param('oauth_verifier');
+
     my $token = $client->get_access_tokens(
         request_token        => $cookie{token},
         request_token_secret => $cookie{token_secret},
