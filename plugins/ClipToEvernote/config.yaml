@@ -1,0 +1,36 @@
+name:           ClipToEvernote
+version:        0.1
+description: |
+    Sync your entry to Evernote.
+system_config_template: system.tmpl
+### TBD    blog_config_template:   config.tmpl
+settings:
+    consumer_key:
+        Scope: system
+    consumer_secret:
+        Scope: system
+
+object_types:
+    entry:
+        evernote_note_guid: string meta
+    author:
+        evernote_oauth_token: string meta
+
+config_directives:
+    EvernoteDebug:
+        default: 0
+
+applications:
+    cms:
+        methods:
+            evernote_widget:           $ClipToEvernote::ClipToEvernote::CMS::show_widget
+            evernote_close_dialog:     $ClipToEvernote::ClipToEvernote::CMS::close_dialog
+
+
+            evernote_start_handshake:  $ClipToEvernote::ClipToEvernote::CMS::start_handshake
+            evernote_verify_handshake: $ClipToEvernote::ClipToEvernote::CMS::verify_handshake
+            evernote_revoke_handshake: $ClipToEvernote::ClipToEvernote::CMS::revoke_handshake
+
+        callbacks:
+            template_param.edit_entry: $ClipToEvernote::ClipToEvernote::insert_widget
+            cms_post_save.entry:       $ClipToEvernote::ClipToEvernote::post_to_evernote

@@ -1,0 +1,10 @@
+<mt:include name="include/chromeless_header.tmpl">
+<script type="text/javascript">
+jQuery( function () {
+  parent.jQuery.fn.mtDialog.close( null, function () {
+    console.log('aaaa');
+    parent.reload_evernote_widget();
+  });
+});
+</script>
+<mt:include name="include/chromeless_header.tmpl">

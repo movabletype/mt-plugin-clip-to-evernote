@@ -1,0 +1,23 @@
+<mt:if name="evernote_notebooks">
+    <mtapp:setting
+        id = "clip-to-evernote-dest-notebook"
+        label = "Notebook"
+        label_class="no-header">
+        <mt:loop name="evernote_notebooks">
+            <mt:if name="__first__">
+                <select name="destination-notebook">
+                    <option value="0"><__trans phrase="Do not clip"></option>
+            </mt:if>
+                    <option value="<mt:var name="guid" />"<mt:if name="default"> selected="selected"</mt:if>><mt:var name="name" /></option>
+            <mt:if name="__last__">
+                </select>
+            </mt:if>
+        </mt:loop>
+    </mtapp:setting>
+    <a href="<mt:var name="script_url">?__mode=evernote_revoke_handshake" class="mt-open-dialog"><__trans phrase="Sign Out"></a>
+<mt:else>
+    <a href="<mt:var name="script_url">?__mode=evernote_start_handshake" class="mt-open-dialog"><__trans phrase="Sign in to Evernote"></a>
+</mt:if>
+<mt:if name="evernote_note_url">
+    <a href="<mt:var name="evernote_note_url">" target="_blank">View in Evernote</a>
+</mt:if>
