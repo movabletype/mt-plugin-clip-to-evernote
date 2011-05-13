@@ -105,7 +105,6 @@ ENML
 
     sub _cleanup_enml {
         my ($str) = @_;
-        return $str unless $str =~ /</;
         my $p = HTML::Parser->new();
         my $out = '';
         $p->handler(text  => sub { $out .= $_[1]; } );
@@ -122,7 +121,9 @@ ENML
                         push @ok_attrs, '/';
                     }
                     else {
-                        push @ok_attrs, sprintf( ' %s = "%s"', $attr, $attr_hash->{$attr} );
+                        my $val = $attr_hash->{$attr};
+                        my $fmt = $val =~ /"/ ? " %s='%s'" : ' %s="%s"';
+                        push @ok_attrs, sprintf( $fmt, $attr, $val );
                     }
                 }
                 $out .= join ' ', @ok_attrs;
@@ -138,6 +139,7 @@ ENML
             }
         });
         $p->parse($str);
+        $p->eof();
         $out;
     }
 }
