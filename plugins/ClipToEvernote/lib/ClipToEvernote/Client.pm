@@ -102,8 +102,10 @@ ENML
         id class accesskey data dynsrc tabindex
     );
     my %disallowed_attrs = map { $_ => 1 } @disallowed_attrs;
+
     sub _cleanup_enml {
         my ($str) = @_;
+        return $str unless $str =~ /</;
         my $p = HTML::Parser->new();
         my $out = '';
         $p->handler(text  => sub { $out .= $_[1]; } );
