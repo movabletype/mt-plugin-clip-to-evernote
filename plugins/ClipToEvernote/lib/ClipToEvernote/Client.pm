@@ -71,7 +71,6 @@ sub entry2note {
     if ( my $guid = $entry->evernote_note_guid ) {
         $note            = $self->proc('getNote', $guid)
             or return;
-        use Data::Dumper; print STDERR Dumper $note;
         $note->{updated} = time * 1000;
         $method          = 'updateNote';
     }
@@ -80,9 +79,17 @@ sub entry2note {
         $note->{active}  = 1;
         $note->{created} = time * 1000;
         $method          = 'createNote';
+        my $attr = new EDAMTypes::NoteAttributes();
+        my $author = MT->model('author')->load( $entry->author_id );
+        $attr->{author} = $author->nickname;
+        $attr->{source} = 'app.movabletype';
+        $attr->{sourceURL} = $entry->permalink;
+        $attr->{sourceApplication} = 'Movable Type';
+        $note->{attributes} = $attr;
     }
     $note->{notebookGuid} = $notebook_guid;
     $note->{title}        = $entry->title;
+    $note->{tagNames}     = [ $entry->tags ];
     my $text    = _cleanup_enml( $entry->text );
     my $content = <<"ENML";
 <?xml version="1.0" encoding="UTF-8"?>
