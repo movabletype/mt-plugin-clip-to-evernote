@@ -69,14 +69,17 @@ sub entry2note {
     my ( $entry, $notebook_guid ) = @_;
     my ( $note, $method );
     if ( my $guid = $entry->evernote_note_guid ) {
-        $note   = $self->proc('getNote', $guid);
-        $method = 'updateNote';
+        $note            = $self->proc('getNote', $guid)
+            or return;
+        use Data::Dumper; print STDERR Dumper $note;
+        $note->{updated} = time * 1000;
+        $method          = 'updateNote';
     }
     else {
         $note ||= new EDAMTypes::Note();
         $note->{active}  = 1;
         $note->{created} = time * 1000;
-        $method = 'createNote';
+        $method          = 'createNote';
     }
     $note->{notebookGuid} = $notebook_guid;
     $note->{title}        = $entry->title;

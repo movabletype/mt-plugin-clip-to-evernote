@@ -61,18 +61,23 @@ HTML
 
 sub post_to_evernote {
     my ( $cb, $app, $entry, $orig ) = @_;
+    my $plugin = MT->component('cliptoevernote');
     my $notebook_guid = $app->param('destination-notebook');
     my $ever = ClipToEvernote::Client->new($app)
         or return 1;
     if ( $notebook_guid ) {
         my $result = $ever->entry2note( $entry, $notebook_guid );
+        if ( !$result ) {
+            return $cb->error($plugin->translate('Failed to sync entry to Evernote.'));
+        }
         my $guid = $result->{guid};
         $entry->evernote_note_guid($guid);
         $entry->save;
     }
     else {
         if ( $orig && ( my $guid = $orig->evernote_note_guid) ) {
-            $ever->proc('deleteNote', $guid);
+            $ever->proc('deleteNote', $guid)
+                or return $cb->error($plugin->translate('Failed to sync entry to Evernote.'));
         }
         $entry->evernote_note_guid(0);
         $entry->save;
