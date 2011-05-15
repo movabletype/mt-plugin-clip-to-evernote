@@ -39,7 +39,6 @@ console.log('so');
 });
 
 </script>
-<mt:var name="evernote_widget_url">
 HTML
     $param->{evernote_widget_url} = $app->uri(
         mode => 'evernote_widget',
