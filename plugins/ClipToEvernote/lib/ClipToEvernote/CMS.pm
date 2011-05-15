@@ -17,26 +17,37 @@ sub show_widget {
     my $entry = MT->model('entry')->load($app->param('entry_id'));
     my ( $guid, $notebook_guid );
     my $ever = ClipToEvernote::Client->new($app);
+    if ( $ever ) {
+        my $notebooks = $ever->proc('listNotebooks');
+        if ( !$notebooks ) {
+            my $errstr = $ever->errstr
+                or die "Failed to access Evernote";
+            chomp $errstr;
+            if ( $errstr eq 'EXPIRED' ) {
+                $ever = undef;
+            }
+            else {
+                return $app->error( $errstr );
+            }
+        }
+        else {
+            $param{evernote_notebooks} = [ map {
+                {   name    => Encode::decode_utf8( $_->{name} ),
+                    guid    => $_->{guid},
+                    default => $notebook_guid             ? $_->{guid} eq $notebook_guid
+                             : defined $guid              ? 0
+                             : $_->{defaultNotebook}      ? 1
+                             :                              0,
+                }
+            } @$notebooks ];
+        }
+    }
     if ( $entry && ( $guid = $entry->evernote_note_guid )) {
         $param{evernote_note_guid} = $guid;
         $param{evernote_note_url}  = ClipToEvernote::Client::url() . 'Home.action#n=' . $guid;
         if ( $ever && ( my $note = $ever->proc('getNote', $guid) )) {
             $param{evernote_notebook_guid} = $notebook_guid = $note->{notebookGuid};
         }
-    }
-    if ( $ever ) {
-        my $token = $app->user->evernote_oauth_token;
-        my $notebooks = $ever->proc('listNotebooks')
-            or die "Failed to get evernote notebook list";
-        $param{evernote_notebooks} = [ map {
-            {   name    => Encode::decode_utf8( $_->{name} ),
-                guid    => $_->{guid},
-                default => $notebook_guid             ? $_->{guid} eq $notebook_guid
-                         : defined $guid              ? 0
-                         : $_->{defaultNotebook}      ? 1
-                         :                              0,
-            }
-        } @$notebooks ];
     }
     $plugin->load_tmpl('evernote_widget.tmpl', \%param);
 }

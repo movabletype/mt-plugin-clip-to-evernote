@@ -11,6 +11,8 @@ use EDAMTypes::Types;
 use EDAMErrors::Types;
 use EDAMNoteStore::NoteStore;
 
+use base qw( MT::ErrorHandler );
+
 sub url {
     return MT->config->EvernoteDebug
         ? 'https://sandbox.evernote.com/' # for debug
@@ -47,19 +49,17 @@ sub proc {
     my $result;
     eval { $result = $self->{client}->$command( $self->{token}, @_) };
     if ( my $exception = $@ ) {
+        my $errstr;
         if ( !ref $exception ) {
-            MT->log('Failed to access Evernote: ' . $exception);
-            return;
+            $errstr = 'Failed to access Evernote: ' . $exception;
         }
-        if ( $exception->{errorCode} == EDAMErrors::EDAMErrorCode::AUTH_EXPIRED ) {
-            #TBD
-            use Data::Dumper;
-            print STDERR Dumper $exception;
+        elsif ( $exception->{errorCode} == EDAMErrors::EDAMErrorCode::AUTH_EXPIRED ) {
+            $errstr = 'EXPIRED';
         }
         else {
-            use Data::Dumper;
-            print STDERR Dumper $exception;
+            $errstr = 'Failed to access Evernote: (%s) %s', $exception->{errorCode}, $exception->{parameter};
         }
+        return $self->error($errstr);
     }
     return $result;
 }
