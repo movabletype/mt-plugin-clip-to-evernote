@@ -47,14 +47,14 @@ HTML
             blog_id  => $app->param('blog_id'),
         },
     );
-    my $beacon = $tmpl->getElementById("entry-feedback-widget");
+    my $beacon = $tmpl->getElementById("entry-publishing-widget");
     my $widget = $tmpl->createElement('app:widget', {
         id       => 'post-to-evernote',
         label    => 'Evernote',
         engry_id => $app->param('id'),
     });
     $widget->innerHTML($html);
-    $tmpl->insertBefore( $widget, $beacon );
+    $tmpl->insertAfter( $widget, $beacon );
     return 1;
 }
 
