@@ -32,8 +32,36 @@ jQuery( function () {
   reload_evernote_widget();
 });
 
+function openEvernoteLoginScreen () {
+    var orig_width       = jQuery('.mt-dialog').width();
+    var orig_margin_left = jQuery('.mt-dialog').css('margin-left');
+    var $dialog = jQuery('.mt-dialog');
+
+    $(document).bind('keyup.evernote', function(event){
+        if (event.keyCode == 27) {
+            $(document).unbind('keyup.evernote');
+            fix_dialog();
+        }
+    });
+
+    $dialog
+      .width('960px')
+      .css('margin-left', '-480px')
+      .mtDialog.open(
+        "<mt:var name="script_url">?__mode=evernote_start_handshake"
+      );
+    return false;
+}
+
+jQuery('a.signin-evernote').live('click', openEvernoteLoginScreen);
+
+function fix_dialog () {
+  jQuery('.mt-dialog')
+    .width('680px')
+    .css('margin-left', '-340px');
+}
+
 jQuery('.signout-evernote').live( 'click', function () {
-console.log('so');
   reload_evernote_widget({ signout: 1 });
   return false;
 });
