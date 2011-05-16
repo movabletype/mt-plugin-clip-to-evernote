@@ -15,10 +15,10 @@ sub show_widget {
         $user->save;
     }
     my $entry = MT->model('entry')->load($app->param('entry_id'));
-    my ( $guid, $notebook_guid );
+    my ( $guid, $notebook_guid, $notebooks );
     my $ever = ClipToEvernote::Client->new($app);
     if ( $ever ) {
-        my $notebooks = $ever->proc('listNotebooks');
+        $notebooks = $ever->proc('listNotebooks');
         if ( !$notebooks ) {
             my $errstr = $ever->errstr
                 or die "Failed to access Evernote";
@@ -30,24 +30,33 @@ sub show_widget {
                 return $app->error( $errstr );
             }
         }
-        else {
-            $param{evernote_notebooks} = [ map {
-                {   name    => Encode::decode_utf8( $_->{name} ),
-                    guid    => $_->{guid},
-                    default => $notebook_guid             ? $_->{guid} eq $notebook_guid
-                             : defined $guid              ? 0
-                             : $_->{defaultNotebook}      ? 1
-                             :                              0,
-                }
-            } @$notebooks ];
-        }
     }
-    if ( $entry && ( $guid = $entry->evernote_note_guid )) {
+    if ( $entry && ( $guid = $entry->evernote_note_guid ) ) {
         $param{evernote_note_guid} = $guid;
         $param{evernote_note_url}  = ClipToEvernote::Client::url() . 'Home.action#n=' . $guid;
-        if ( $ever && ( my $note = $ever->proc('getNote', $guid) )) {
-            $param{evernote_notebook_guid} = $notebook_guid = $note->{notebookGuid};
+        if ( $ever && ( my $note = $ever->proc( 'getNote', $guid, 1 ) ) ) {
+            $param{evernote_notebook_guid} = $notebook_guid
+                = $note->{notebookGuid};
+            my $entry_modified = 1000
+                * MT::Util::ts2epoch( $entry->blog_id, $entry->modified_on );
+            $param{evernote_time_diff} = $note->updated - $entry_modified;
+            $param{evernote_is_modified}
+                = ( $note->updated - $entry_modified ) > 0;
+            my $content = $note->content;
+            $content =~ m{<en-note>(.*)</en-note>}s;
+            $param{evernote_note_content} = $1;
         }
+    }
+    if ( $notebooks ) {
+        $param{evernote_notebooks} = [ map {
+            {   name    => Encode::decode_utf8( $_->{name} ),
+                guid    => $_->{guid},
+                default => $notebook_guid             ? $_->{guid} eq $notebook_guid
+                         : !defined $guid             ? 0
+                         : $_->{defaultNotebook}      ? 1
+                         :                              0,
+            }
+        } @$notebooks ];
     }
     $plugin->load_tmpl('evernote_widget.tmpl', \%param);
 }

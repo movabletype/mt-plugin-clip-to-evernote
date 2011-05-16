@@ -69,15 +69,15 @@ sub entry2note {
     my ( $entry, $notebook_guid ) = @_;
     my ( $note, $method );
     if ( my $guid = $entry->evernote_note_guid ) {
-        $note            = $self->proc('getNote', $guid)
-            or return;
-        $note->{updated} = time * 1000;
+        $note            = $self->proc('getNote', $guid) or return;
+        $note->{updated} = 1000 * MT::Util::ts2epoch( $entry->blog_id, $entry->modified_on );
         $method          = 'updateNote';
     }
     else {
         $note ||= new EDAMTypes::Note();
         $note->{active}  = 1;
         $note->{created} = time * 1000;
+        $note->{updated} = 1000 * MT::Util::ts2epoch( $entry->blog_id, $entry->modified_on );
         $method          = 'createNote';
         my $attr = new EDAMTypes::NoteAttributes();
         my $author = MT->model('author')->load( $entry->author_id );
@@ -94,9 +94,7 @@ sub entry2note {
     my $content = <<"ENML";
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
-<en-note>
-$text
-</en-note>
+<en-note>$text</en-note>
 ENML
     $note->{content} = $content;
     return $self->proc($method, $note);
