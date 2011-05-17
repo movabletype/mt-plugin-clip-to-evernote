@@ -53,7 +53,9 @@ sub proc {
             $errstr = 'EXPIRED';
         }
         else {
-            $errstr = 'Failed to access Evernote: (%s) %s', $exception->{errorCode}, $exception->{parameter};
+            $errstr = sprintf 'Failed to access Evernote: (%s) %s',
+                          $exception->{errorCode} || $exception->{code},
+                          $exception->{parameter} || $exception->{message};
         }
         return $self->error($errstr);
     }
