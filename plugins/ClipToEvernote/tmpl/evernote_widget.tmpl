@@ -15,7 +15,7 @@
             </mt:if>
         </mt:loop>
     </mtapp:setting>
-    <a href="#" class="signout-evernote"><__trans phrase="Sign Out"></a>
+    <mt:if name="config.debugmode"><a href="#" class="signout-evernote"><__trans phrase="Sign Out"></a></mt:if>
 <mt:else>
     <a href="#" class="signin-evernote"><__trans phrase="Sign in to Evernote"></a>
 </mt:if>
