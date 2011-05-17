@@ -8,7 +8,16 @@ use ClipToEvernote::Client;
 
 sub insert_widget {
     my ( $cb, $app, $param, $tmpl ) = @_;
-    my $html = <<'HTML';
+    my $html;
+    my $entry_id = $app->param('id') || 0;
+    if ( $entry_id && ( my $entry = MT->model('entry')->load($entry_id) ) ) {
+        if ( $entry->author_id != $app->user->id ) {
+            $html = <<'HTML';
+<__trans phrase="Evernote access is allowed only for entry's owner.">
+HTML
+        }
+    }
+    $html ||= <<'HTML';
 <script type="text/javascript">
 function reload_evernote_widget (options) {
   options = jQuery.extend({}, options);
@@ -71,7 +80,7 @@ HTML
     $param->{evernote_widget_url} = $app->uri(
         mode => 'evernote_widget',
         args => {
-            entry_id => $app->param('id') || 0,
+            entry_id => $entry_id,
             blog_id  => $app->param('blog_id'),
         },
     );
