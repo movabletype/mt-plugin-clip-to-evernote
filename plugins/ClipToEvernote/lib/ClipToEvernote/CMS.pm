@@ -70,8 +70,8 @@ sub close_dialog {
 sub get_oauth_client {
     my $plugin = MT->component('cliptoevernote');
     return ClipToEvernote::OAuth->new(
-        consumer_key    => $plugin->get_config_value('consumer_key',    'system'),
-        consumer_secret => $plugin->get_config_value('consumer_secret', 'system'),
+        consumer_key    => $plugin->get_config_value('evernote-consumer-key',    'system'),
+        consumer_secret => $plugin->get_config_value('evernote-consumer-secret', 'system'),
     );
 }
 

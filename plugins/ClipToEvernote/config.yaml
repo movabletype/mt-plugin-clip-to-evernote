@@ -6,9 +6,9 @@ system_config_template: system.tmpl
 l10n_class: ClipToEvernote::L10N
 ### TBD    blog_config_template:   config.tmpl
 settings:
-    consumer_key:
+    evernote-consumer-key:
         Scope: system
-    consumer_secret:
+    evernote-consumer-secret:
         Scope: system
 
 object_types:
