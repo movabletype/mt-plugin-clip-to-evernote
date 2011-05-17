@@ -18,8 +18,8 @@ object_types:
         evernote_oauth_token: string meta
 
 config_directives:
-    EvernoteDebug:
-        default: 0
+    EvernoteServer:
+        default: https://www.evernote.com/
 
 applications:
     cms:

@@ -13,11 +13,7 @@ use EDAMNoteStore::NoteStore;
 
 use base qw( MT::ErrorHandler );
 
-sub url {
-    return MT->config->EvernoteDebug
-        ? 'https://sandbox.evernote.com/' # for debug
-        : 'https://www.evernote.com/';
-}
+sub url { MT->config->EvernoteServer }
 
 sub endpoint {
     return url() . 'edam/note/';
