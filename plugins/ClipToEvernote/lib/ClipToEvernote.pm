@@ -46,9 +46,9 @@ function openEvernoteLoginScreen () {
     var orig_margin_left = jQuery('.mt-dialog').css('margin-left');
     var $dialog = jQuery('.mt-dialog');
 
-    $(document).bind('keyup.evernote', function(event){
+    jQuery(document).bind('keyup.evernote', function(event){
         if (event.keyCode == 27) {
-            $(document).unbind('keyup.evernote');
+            jQuery(document).unbind('keyup.evernote');
             fix_dialog();
         }
     });
