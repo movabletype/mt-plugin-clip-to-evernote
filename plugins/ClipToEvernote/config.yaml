@@ -1,10 +1,17 @@
-name:           ClipToEvernote
-version:        0.1
+name:        Clip To Evernote
+id:          ClipToEvernote
+key:         ClipToEvernote
+version:     0.1
+author_link: http://www.sixapart.com/
+author_name: Six Apart, Ltd.
 description: |
     Sync your entry to Evernote.
+
+l10n_class:             ClipToEvernote::L10N
 system_config_template: system.tmpl
-l10n_class: ClipToEvernote::L10N
-### TBD    blog_config_template:   config.tmpl
+### TBD
+# blog_config_template:   config.tmpl
+
 settings:
     evernote-consumer-key:
         Scope: system
