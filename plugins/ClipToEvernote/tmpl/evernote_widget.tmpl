@@ -1,26 +1,33 @@
 <__trans_section component="ClipToEvernote">
+<img alt="Evernote" src="<$mt:var name="static_uri"$>plugins/ClipToEvernote/images/evernote.png" />
 <mt:if name="evernote_notebooks">
-    <mtapp:setting
-        id = "clip-to-evernote-dest-notebook"
-        label = "Notebook"
-        label_class="no-header">
-        <img alt="Evernote" src="<$mt:var name="static_uri"$>plugins/ClipToEvernote/images/evernote.png" />
-        <mt:loop name="evernote_notebooks">
-            <mt:if name="__first__">
-                <select name="destination-notebook">
-                    <option value="0"><__trans phrase="Do not clip"></option>
+    <mt:loop name="evernote_notebooks">
+        <mt:if name="__first__">
+<select name="destination-notebook">
+            <mt:if name="evernote_note_url">
+    <option value="0"><__trans phrase="Delete clip note"></option>
+            <mt:else>
+    <option value="0"><__trans phrase="Do not clip"></option>
             </mt:if>
-                    <option value="<mt:var name="guid" />"<mt:if name="default"> selected="selected"</mt:if>><mt:var name="name" /></option>
-            <mt:if name="__last__">
-                </select>
-            </mt:if>
-        </mt:loop>
-    </mtapp:setting>
-    <mt:if name="config.debugmode"><a href="#" class="signout-evernote"><__trans phrase="Sign Out"></a></mt:if>
+        </mt:if>
+    <option value="<mt:var name="guid" />"<mt:if name="default"> selected="selected"</mt:if>><mt:var name="name" /></option>
+        <mt:if name="__last__">
+</select>
+        </mt:if>
+    </mt:loop>
 <mt:else>
-    <a href="#" class="signin-evernote button"><img alt="Evernote" src="<$mt:var name="static_uri"$>plugins/ClipToEvernote/images/evernote.png" /> <__trans phrase="Sign in to Evernote"></a>
+<a href="#" class="signin-evernote"><__trans phrase="Sign in"></a>
 </mt:if>
 <mt:if name="evernote_note_url">
+<div style="margin-top:5px;">
     <a href="<mt:var name="evernote_note_url">" target="_blank"><__trans phrase="View in Evernote"></a>
+</div>
+</mt:if>
+<mt:if name="evernote_notebooks">
+    <mt:if name="config.debugmode">
+<div style="margin-top:5px;">
+    <a href="#" class="signout-evernote"><__trans phrase="Sign Out"></a>
+</div>
+    </mt:if>
 </mt:if>
 </__trans_section>
