@@ -15,6 +15,10 @@ use vars qw( %Lexicon );
   'Sign Out' => 'サインアウト',
   'Sign in to Evernote' => 'Evernoteにサインイン',
   'View in Evernote' => 'Evernoteでブログ記事を見る',
+
+## plugins/ClipToEvernote/tmpl/system.tmpl
+  'Consumer Key' => 'Consumer Key',
+  'Consumer Secret' => 'Consumer Secret',
 );
 
 1;

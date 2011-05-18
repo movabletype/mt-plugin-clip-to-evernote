@@ -87,7 +87,7 @@ HTML
     my $beacon = $tmpl->getElementById("entry-publishing-widget");
     my $widget = $tmpl->createElement('app:widget', {
         id       => 'post-to-evernote',
-        label    => 'Evernote',
+        label    => 'Clip to Evernote',
         engry_id => $app->param('id'),
     });
     $widget->innerHTML($html);
