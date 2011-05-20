@@ -100,7 +100,7 @@ sub entry2note {
     $note->{notebookGuid} = $notebook_guid;
     $note->{title}        = $entry->title;
     $note->{tagNames}     = [ $entry->tags ];
-    my $text    = _cleanup_enml( $entry->text );
+    my $text    = _cleanup_enml( $entry->text . "\n\n" . $entry->text_more );
     my $content = <<"ENML";
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
