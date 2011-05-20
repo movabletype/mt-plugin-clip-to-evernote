@@ -1,0 +1,55 @@
+# Clip To Evernote plugin for Movable Type 5
+
+## Authors
+
+Taichi Kaminogoya, Akira Sawada
+
+
+## Copyright
+
+The following copyright notice applies to all the files provided in this
+distribution, including binary files, unless explicitly noted otherwise.
+
+Copyright 2009-2011 Six Apart, Ltd.
+
+
+## License
+
+This library is free software released under the GPL.
+
+
+## Overview
+
+Synchronize your Movable Type Entry to Evernote.
+
+
+## Prerequisites
+
+This plugin requires these external perl modules.
+
+* IO::String
+* Bit::Vector
+* HTML::Parser
+
+
+## Installation
+
+1. Unpack the Clip To Evernote archive.
+2. Copy the contents of ClipToEvernote/mt-static/plugins into /path/to/mt/mt-static/plugins
+3. Copy the contents of ClipToEvernote/plugins into /path/to/mt/plugins/
+
+
+## Set up
+
+1. Get your Evernote API Key from http://www.evernote.com/about/developer/api/
+ * http://www.evernote.com/about/intl/jp/developer/api/ (Japanese)
+2. Login to your Movable Type as system administrator
+3. Go to System > Plugins setting screen
+4. Save your Evernote consumer key and consumer secret in Clip To Evernote pane
+
+
+## Changes
+
+### 0.1 (20 May 2011)
+
+* Initial release.
